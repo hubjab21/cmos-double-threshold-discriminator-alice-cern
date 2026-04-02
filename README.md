@@ -269,7 +269,7 @@ If the signal also crosses the high threshold within a defined time window, the 
 ---
 ### Dual-Threshold Discriminator (DTD) – Block Diagram
 
-![DTD block diagram](images/discriminator/dtd_schematic.png)
+![DTD block diagram](images/discriminator/dtd-delay.png)
 
 This diagram presents the conceptual architecture of the dual-threshold discriminator (DTD).
 The circuit is designed to be implemented both as a **discrete solution** and as an **integrated CMOS circuit**.
