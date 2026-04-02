@@ -64,7 +64,7 @@ The comparator is a fundamental building block of the proposed discriminator, re
 
 ![Comparator Symbol](images/comparator/comparator_schematic_symbol.png)
 
-The comparator operates by comparing two input voltages, \( V_{+} \) and \( V_{-} \), and generating a digital output depending on their relation. In an ideal case, the output switches instantaneously when \( V_{+} = V_{-} \), producing a perfect step transition between low (\( V_{OL} \)) and high (\( V_{OH} \)) levels :contentReference[oaicite:0]{index=0}.
+The comparator operates by comparing two input voltages, \( V_{+} \) and \( V_{-} \), and generating a digital output depending on their relation. In an ideal case, the output switches instantaneously when \( V_{+} = V_{-} \), producing a perfect step transition between low (\( V_{OL} \)) and high (\( V_{OH} \)) levels.
 
 ---
 
@@ -313,23 +313,23 @@ PWL FILE="detector.txt"
 
 The design uses two **TLV3801 comparators**:
 
-* low threshold: 0.1 V
-* high threshold: 0.5 V
+- low threshold: 0.1 V
+- high threshold: 0.5 V
 
 The low-threshold output is delayed by **5 ns**, then combined with the high-threshold output using an **AND gate (SN74AUC1G08)**.
 
 The output pulse is generated only when:
 
-* the signal crosses the low threshold,
-* then crosses the high threshold within the delay window.
+- the signal crosses the low threshold,
+- then crosses the high threshold within the delay window.
 
 ---
 
 ### Notes
 
-* The delay is **artificially implemented** using LTspice (`delay()` function)
-* The detector signal is **emulated using a PWL file (`detector.txt`)**
-* No external delay IC is used (simulation simplification)
+- The delay is **artificially implemented** using LTspice (`delay()` function)
+- The detector signal is **emulated using a PWL file (`detector.txt`)**
+- No external delay IC is used (simulation simplification)
 
 ---
 
@@ -346,4 +346,113 @@ This approach was used only for simulation purposes and serves as an example of 
 
 ---
 
+## Design Constraints
 
+The dual-threshold discriminator is designed to process fast signals from MCP-PMT and fine-mesh PMTs with varying amplitudes and timing characteristics.
+
+An external buffer amplifier (LMH6629, ~10× gain) is assumed to improve detection of low-amplitude signals while preserving fast signal edges. Since the 180 nm CMOS technology is limited to a 3.3 V supply, the input signal is constrained to **−1.65 V to +1.65 V** using an attenuator.
+
+This ensures:
+- safe operation of the ASIC input stage 
+- protection against overvoltage 
+- reduced noise impact and parasitic effects 
+- improved timing accuracy (reduced time walk)
+
+---
+
+### CMOS Inverter
+The design starts with a basic CMOS inverter, built from one PMOS and one NMOS transistor.  
+It provides signal inversion and is later used to construct more complex logic gates.
+
+![CMOS Inverter](./images/cmos_inverter.png)
+
+---
+
+### CMOS NAND Gate
+Next, a NAND gate is implemented using:
+- parallel PMOS transistors (pull-up network),
+- series NMOS transistors (pull-down network).
+
+![CMOS NAND](./images/cmos_nand.png)
+
+---
+
+### AND Gate (NAND + Inverter)
+The AND gate is realized by connecting a NAND gate followed by an inverter:
+
+\[
+AND = NOT(NAND)
+\]
+
+This approach simplifies CMOS implementation.
+
+![CMOS AND](./images/cmos_and.png)
+
+---
+
+### Analog Comparator
+A CMOS analog comparator is designed using:
+- differential input pair,
+- current source (IBIAS),
+- active load.
+
+It converts the analog signal into a digital output based on a threshold.
+
+![Comparator](./images/comparator.png)
+
+---
+
+### Discriminator Architecture
+The discriminator is built from:
+- two comparators (low and high threshold),
+- delay block (simulated),
+- AND gate.
+
+Operation:
+- low threshold → delayed,
+- high threshold → direct,
+- AND → detects coincidence.
+
+![Discriminator Schematic](./images/discriminator_schematic.png)
+
+---
+
+### Comparator Testbench
+A testbench is used to verify comparator behavior with a pulse input and reference voltage.
+
+![Comparator TB](./images/comparator_tb.png)
+
+---
+
+### Discriminator Testbench
+The full discriminator is tested using a pulse input and threshold levels.
+
+![Discriminator TB](./images/discriminator_tb.png)
+
+---
+
+### Transient Response
+Simulation results show correct operation:
+- threshold detection,
+- delayed signal,
+- final AND output.
+
+![Waveforms](./images/discriminator_waveform.png)
+
+---
+
+### Layout (ASIC Implementation)
+All blocks are implemented in CMOS layout:
+- inverter,
+- NAND,
+- AND,
+- comparator,
+- full discriminator.
+
+![Layout](./images/discriminator_layout.png)
+
+---
+
+## Author
+
+Hubert Jabłoński
