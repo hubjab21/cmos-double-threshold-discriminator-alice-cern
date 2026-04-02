@@ -1,8 +1,8 @@
 # Design of a Double-Threshold Discriminator in CMOS Technology for the FIT Detector in the ALICE Experiment at CERN
 
-## Abstract
-
 This work presents the design and analysis of a double-threshold discriminator implemented in 180 nm CMOS technology, dedicated to the Fast Interaction Trigger (FIT) detector in the ALICE experiment at CERN. The proposed solution enables precise time detection of fast analog signals with a wide amplitude range while minimizing time walk and jitter. Both discrete and ASIC implementations were analyzed and validated through simulations.
+
+---
 
 ## Introduction
 
@@ -10,21 +10,29 @@ Modern high-energy physics experiments, such as ALICE at CERN, require extremely
 
 Traditional single-threshold discriminators suffer from time walk effects, making them less suitable for precise timing applications. Therefore, a double-threshold discriminator architecture was chosen as a compromise between simplicity and timing accuracy.
 
+---
+
 ## System Requirements
 
 The designed double-threshold discriminator in CMOS technology must operate under demanding conditions imposed by the Fast Interaction Trigger (FIT) detector in the ALICE experiment at CERN.
 
 The system is required to process two distinct classes of input signals originating from different types of photomultiplier tubes (PMTs), each characterized by significantly different electrical properties.
 
+---
+
 ### Signal Classes
 
 Two main categories of input signals were identified:
+
+---
 
 #### FT0 (MCP-PMT signals)
 - Amplitude range: 3 mV – 2000 mV 
 - Rise time: ~1.6 ns 
 - Fall time: ~4 ns 
 - Pulse charge: 31 pVs / 50 Ω per 1 mip 
+
+---
 
 #### FV0/FDD (fine mesh PMT signals)
 - Amplitude range: 3 mV – 5000 mV 
@@ -34,10 +42,9 @@ Two main categories of input signals were identified:
 
 These parameters indicate that the discriminator must handle a wide dynamic range of input amplitudes while maintaining high timing precision for very fast signals.
 
-
+---
 
 ## Methodology
-
 The project consisted of two main stages:
 
 1. Design and simulation of a discrete version of the discriminator in LTspice,
@@ -45,15 +52,21 @@ The project consisted of two main stages:
 
 The system is based on two comparators with different thresholds (low and high), combined with digital logic to determine the correct timing of the input pulse.
 
+---
+
 ## Comparator Design
 
 The comparator is a fundamental building block of the proposed discriminator, responsible for converting analog input signals into digital logic levels. Its performance directly impacts the timing accuracy, jitter, and sensitivity of the entire system.
+
+---
 
 ### Operating Principle
 
 ![Comparator Symbol](images/comparator/comparator_schematic_symbol.png)
 
 The comparator operates by comparing two input voltages, \( V_{+} \) and \( V_{-} \), and generating a digital output depending on their relation. In an ideal case, the output switches instantaneously when \( V_{+} = V_{-} \), producing a perfect step transition between low (\( V_{OL} \)) and high (\( V_{OH} \)) levels :contentReference[oaicite:0]{index=0}.
+
+---
 
 ### Ideal vs Real Behavior
 
@@ -62,6 +75,8 @@ The comparator operates by comparing two input voltages, \( V_{+} \) and \( V_{-
 | ![](images/comparator/comparator_ideal_waveform.png) | ![](images/comparator/comparator_real_waveform.png) |
 
 In practice, the transition is not instantaneous. Real comparators exhibit a finite switching region defined by two thresholds: \( V_{IL} \) and \( V_{IH} \). The difference between these values introduces hysteresis, which improves noise immunity and prevents multiple switching events in the presence of small signal fluctuations.
+
+---
 
 ### Design Considerations
 
@@ -77,3 +92,131 @@ To meet these requirements, a preamplifier-based comparator architecture was sel
 
 The comparator serves as the core decision element in the double-threshold discriminator, enabling precise timing extraction from fast detector signals.
 
+---
+
+## 4. Comparison of Discriminator Architectures
+
+A discriminator is an electronic circuit used to detect signals exceeding a predefined voltage threshold and convert analog signals into digital form. Unlike a comparator, which only compares two voltages, a discriminator performs signal selection, distinguishing meaningful events from noise. This functionality is essential in particle detection systems, where fast and reliable signal processing is required.
+
+In practice, three main discriminator architectures are commonly used:
+- Leading Edge Discriminator (LED),
+- Constant Fraction Discriminator (CFD),
+- Dual-Threshold Discriminator (DTD).
+
+---
+
+## 4.1 Leading Edge Discriminator (LED)
+
+The **Leading Edge Discriminator (LED)** is one of the simplest threshold detection architectures used to convert analog signals into digital pulses. The circuit switches its output to a high state when the input signal exceeds a predefined voltage threshold.
+
+The simplest implementation consists of a single comparator, where one input is connected to the signal and the second to a reference voltage \( V_{ref} \), which defines the detection threshold. The reference voltage can be either positive or negative, depending on the type of detected signals. When the input signal exceeds this threshold, the comparator generates a digital pulse at the output.
+
+To prevent multiple triggering caused by noise or oscillations around the threshold, a **monostable circuit** is often added. This block generates an output pulse with a defined width, ensuring stable operation and preventing repeated triggering during a single rising edge.
+
+In practice, such a simplified system may still be sensitive to noise and low-amplitude fluctuations. Therefore, additional stabilization techniques such as **hysteresis** are often used. This is typically implemented by introducing positive feedback (e.g., using an additional resistor), which improves noise immunity and reduces false switching near the threshold.
+
+---
+
+### LED schematic
+
+![LED schematic](images/discriminator/led_schematic.png)
+
+*Figure: Simplified Leading Edge Discriminator with comparator and monostable block.*
+
+The LED can operate with both positive and negative input pulses, depending on the selected threshold \( V_{ref} \). The monostable stage is optional and is used when there is a need to control output pulse width and suppress multiple triggering.
+
+---
+
+### Time walk (jitter effect)
+
+![LED waveform](images/discriminator/led_waveform.png)
+
+*Figure: Threshold crossing for signals with different amplitudes.*
+
+The waveform presents three input signals with different amplitudes:
+
+- 🟢 **Green — Signal 1 (~2.0 V)** 
+- 🔵 **Blue — Signal 2 (~1.5 V)** 
+- 🟠 **Orange — Signal 3 (~1.0 V)** 
+
+The **purple dashed line** represents the detection threshold (~0.9 V).
+
+Although all signals start at the same time, they cross the threshold at different moments:
+- Signal 1 → 0.525 ns 
+- Signal 2 → 0.600 ns 
+- Signal 3 → 0.750 ns 
+
+The difference between detection times is called **time walk (jitter)** and in this case equals:
+
+\[
+\Delta t = 0.225 \text{ ns}
+\]
+
+It is illustrated by the **purple double arrow** on the plot.
+
+Key observation:
+- higher amplitude → earlier detection 
+- lower amplitude → delayed detection 
+
+This effect introduces timing uncertainty and limits the precision of the LED architecture.
+
+---
+
+## 4.2 Constant Fraction Discriminator (CFD)
+
+The Constant Fraction Discriminator (CFD) is designed to eliminate the **time walk effect**, making the detection time independent of signal amplitude.
+
+---
+
+### Principle of operation
+The input signal is split into two paths:
+- one is **attenuated** (typically 20–50% of amplitude),
+- the other is **delayed** by a fixed time \(T\).
+
+Both signals are then subtracted. The output is triggered at the **zero-crossing point** of the resulting signal, which corresponds to a constant fraction of the input pulse.
+
+---
+
+### Key advantage
+- detection occurs at the same relative point of the signal rise → **high timing precision**
+
+
+![CFD schematic](images/discriminator/cfd_schematic.png)
+
+*Figure: CFD architecture with delay line, attenuator, differential summation, and comparator.*
+
+
+![CFD waveform](images/discriminator/cfd_waveform.png)
+
+*Figure: CFD operation in time domain.*
+
+Legend:
+- 🟠 **Orange** — input signal 
+- 🔵 **Blue** — delayed signal 
+- 🟢 **Green** — attenuated signal 
+- 🟣 **Purple** — difference signal (delayed − attenuated) 
+- 🔴 **Red dashed line** — zero-crossing (trigger point) 
+- ⚫ **Black signal** — digital output (monostable pulse)
+
+The zero-crossing point is nearly independent of amplitude → minimal jitter.
+
+![CFD waveform 0–100 ns](images/discriminator/cfd_waveform_100.png)
+
+*Figure: Multiple events (0–100 ns range).*
+
+- ✖ **Black crosses** — detection points (zero-crossings) 
+- signals remain time-aligned despite amplitude variations 
+
+![CFD waveform 0–495 ns](images/discriminator/cfd_waveform_495.png)
+
+*Figure: Long time window (0–495 ns).*
+
+- repeated detections with stable timing 
+- confirms robustness for complex signal sequences 
+
+---
+
+### Summary
+- ✔ eliminates time walk 
+- ✔ very high timing accuracy 
+- ❌ more complex than LED 
