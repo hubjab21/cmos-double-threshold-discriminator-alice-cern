@@ -205,8 +205,19 @@ The zero-crossing point is nearly independent of amplitude → minimal jitter.
 
 *Figure: Long time window (0–495 ns).*
 
-- repeated detections with stable timing 
-- confirms robustness for complex signal sequences 
+
+| Time [ns] | Input signal amplitude [V] |
+|----------|-----------------------------|
+| 56.852   | 0.0139                      |
+| 60.171   | 0.0074                      |
+| 98.115   | 0.0163                      |
+| 108.851  | 0.0126                      |
+| 468.057  | 0.0274                      |
+| 473.379  | 0.0074                      |
+
+The results confirm that detection occurs at very low voltage levels, 
+well below the signal peak. This demonstrates that CFD timing depends on 
+the signal shape rather than its amplitude, effectively eliminating time walk.
 
 ---
 
@@ -251,9 +262,9 @@ If the signal also crosses the high threshold within a defined time window, the 
 - 🟣 **Low threshold (Vlow)** — early detection level
 - 🔴 **High threshold (Vhigh)** — validation level
 
-**Δt1 (green)** = **0.100 ns**
-**Δt2 (blue)** = **0.133 ns** 
-**Δt3 (orange)** = **0.200 ns**
+**Δt1 (green)** = **0.100 ns** <br>
+**Δt2 (blue)** = **0.133 ns** <br>
+**Δt3 (orange)** = **0.200 ns** <br>
 
 ---
 
