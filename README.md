@@ -94,7 +94,7 @@ The comparator serves as the core decision element in the double-threshold discr
 
 ---
 
-## 4. Comparison of Discriminator Architectures
+## Comparison of Discriminator Architectures
 
 A discriminator is an electronic circuit used to detect signals exceeding a predefined voltage threshold and convert analog signals into digital form. Unlike a comparator, which only compares two voltages, a discriminator performs signal selection, distinguishing meaningful events from noise. This functionality is essential in particle detection systems, where fast and reliable signal processing is required.
 
@@ -105,7 +105,7 @@ In practice, three main discriminator architectures are commonly used:
 
 ---
 
-## 4.1 Leading Edge Discriminator (LED)
+## Leading Edge Discriminator (LED)
 
 The **Leading Edge Discriminator (LED)** is one of the simplest threshold detection architectures used to convert analog signals into digital pulses. The circuit switches its output to a high state when the input signal exceeds a predefined voltage threshold.
 
@@ -156,7 +156,7 @@ It is illustrated by the **purple double arrow** on the plot.
 
 ---
 
-## 4.2 Constant Fraction Discriminator (CFD)
+## Constant Fraction Discriminator (CFD)
 
 The Constant Fraction Discriminator (CFD) is designed to eliminate the **time walk effect**, making the detection time independent of signal amplitude.
 
@@ -221,7 +221,7 @@ the signal shape rather than its amplitude, effectively eliminating time walk.
 
 ---
 
-## 4.3 Dual-Threshold Discriminator (DTD)
+## Dual-Threshold Discriminator (DTD)
 
 The Dual-Threshold Discriminator (DTD) improves timing accuracy by using **two voltage thresholds** instead of one.
 
@@ -262,9 +262,69 @@ If the signal also crosses the high threshold within a defined time window, the 
 - 🟣 **Low threshold (Vlow)** — early detection level
 - 🔴 **High threshold (Vhigh)** — validation level
 
-**Δt1 (green)** = **0.100 ns** <br>
-**Δt2 (blue)** = **0.133 ns** <br>
-**Δt3 (orange)** = **0.200 ns** <br>
+- 🟢 **Δt1 (green)** = **0.100 ns** <br>
+- 🔵 **Δt2 (blue)** = **0.133 ns** <br>
+- 🟠 **Δt3 (orange)** = **0.200 ns** <br>
 
 ---
+
+## LTspice Implementation (DTD)
+
+The circuit was simulated in **LTspice 26**.
+
+```spice
+.tran 500n
+```
+
+**Delay (behavioral source):**
+
+```spice
+V=delay(V(Comparator1_OUT+), 5n)
+```
+
+**Input signal (PWL file):**
+
+```spice
+PWL FILE="detector.txt"
+```
+
+---
+
+### Description
+
+The design uses two **TLV3801 comparators**:
+
+* low threshold: 0.1 V
+* high threshold: 0.5 V
+
+The low-threshold output is delayed by **5 ns**, then combined with the high-threshold output using an **AND gate (SN74AUC1G08)**.
+
+The output pulse is generated only when:
+
+* the signal crosses the low threshold,
+* then crosses the high threshold within the delay window.
+
+---
+
+### Notes
+
+* The delay is **artificially implemented** using LTspice (`delay()` function)
+* The detector signal is **emulated using a PWL file (`detector.txt`)**
+* No external delay IC is used (simulation simplification)
+
+---
+
+### Schematics and Waveforms
+
+The delay block was not implemented as a physical circuit in this project. Instead, it was modeled using the LTspice `delay()` function to emulate the behavior of an external delay component.
+
+This approach was used only for simulation purposes and serves as an example of how a real delay element (e.g., a programmable delay line such as MC10EP195) could be integrated into the system.
+
+
+![DTD schematic](images/LTspice/ltspice_schematic.png)
+
+![DTD waveform](images/LTspice/ltspice_waveform.png)
+
+---
+
 
