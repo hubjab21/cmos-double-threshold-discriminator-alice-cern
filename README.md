@@ -154,12 +154,6 @@ The difference between detection times is called **time walk (jitter)** and in t
 
 It is illustrated by the **purple double arrow** on the plot.
 
-Key observation:
-- higher amplitude → earlier detection 
-- lower amplitude → delayed detection 
-
-This effect introduces timing uncertainty and limits the precision of the LED architecture.
-
 ---
 
 ## 4.2 Constant Fraction Discriminator (CFD)
@@ -177,7 +171,7 @@ Both signals are then subtracted. The output is triggered at the **zero-crossing
 
 ---
 
-### Key advantage
+### Main characteristic
 - detection occurs at the same relative point of the signal rise → **high timing precision**
 
 
@@ -191,12 +185,12 @@ Both signals are then subtracted. The output is triggered at the **zero-crossing
 *Figure: CFD operation in time domain.*
 
 Legend:
-- 🟠 **Orange** — input signal 
-- 🔵 **Blue** — delayed signal 
-- 🟢 **Green** — attenuated signal 
-- 🟣 **Purple** — difference signal (delayed − attenuated) 
-- 🔴 **Red dashed line** — zero-crossing (trigger point) 
-- ⚫ **Black signal** — digital output (monostable pulse)
+- 🟠 **Input signal** — original pulse (~0.34 V peak) 
+- 🔵 **Delayed signal** — shifted by Δ ≈ **1.5 ns** 
+- 🟢 **Attenuated signal** — scaled version (f ≈ **0.30**) 
+- 🟣 **Difference signal** (delayed − attenuated)
+- 🔴 **Zero-crossing** — trigger point (**~6.74 ns**) 
+- ⚫ **Digital output (0/5 V)** — generated pulse 
 
 The zero-crossing point is nearly independent of amplitude → minimal jitter.
 
@@ -216,7 +210,50 @@ The zero-crossing point is nearly independent of amplitude → minimal jitter.
 
 ---
 
-### Summary
-- ✔ eliminates time walk 
-- ✔ very high timing accuracy 
-- ❌ more complex than LED 
+## 4.3 Dual-Threshold Discriminator (DTD)
+
+The Dual-Threshold Discriminator (DTD) improves timing accuracy by using **two voltage thresholds** instead of one.
+
+### Principle of operation
+The input signal is monitored using:
+- a **low threshold (Vlow)** – detects the early presence of the signal,
+- a **high threshold (Vhigh)** – confirms that the signal amplitude is valid.
+
+When the signal crosses the low threshold, time \(t_1\) is registered and delayed. 
+If the signal also crosses the high threshold within a defined time window, the output is generated.
+
+---
+
+![DTD schematic](images/discriminator/dtd_schematic.png)
+
+*Figure: Dual-threshold discriminator with two comparators, delay block, AND logic, and monostable.*
+
+---
+
+![DTD waveform](images/discriminator/dtd_waveform.png)
+
+*Figure: Illustration of jitter reduction using DTD.*
+
+**Legend (DTD waveform):**
+
+- 🟢 **Signal 1** — highest amplitude (~2.0 V) 
+  - crossing Vlow: **0.425 ns** 
+  - crossing Vhigh: **0.525 ns**
+
+- 🔵 **Signal 2** — medium amplitude (~1.5 V) 
+  - crossing Vlow: **0.467 ns** 
+  - crossing Vhigh: **0.600 ns**
+
+- 🟠 **Signal 3** — lowest amplitude (~1.0 V)
+  - crossing Vlow: **0.550 ns** 
+  - crossing Vhigh: **0.750 ns**
+
+- 🟣 **Low threshold (Vlow)** — early detection level
+- 🔴 **High threshold (Vhigh)** — validation level
+
+**Δt1 (green)** = **0.100 ns**
+**Δt2 (blue)** = **0.133 ns** 
+**Δt3 (orange)** = **0.200 ns**
+
+---
+
