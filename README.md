@@ -267,6 +267,25 @@ If the signal also crosses the high threshold within a defined time window, the 
 - 🟠 **Δt3 (orange)** = **0.200 ns** <br>
 
 ---
+### Dual-Threshold Discriminator (DTD) – Block Diagram
+
+![DTD block diagram](images/discriminator/dtd_schematic.png)
+
+This diagram presents the conceptual architecture of the dual-threshold discriminator (DTD).
+The circuit is designed to be implemented both as a **discrete solution** and as an **integrated CMOS circuit**.
+
+The input signal is compared with two voltage levels:
+
+- **Low threshold (R₂)** – improves timing precision
+- **High threshold (R₃)** – suppresses noise and false triggers
+
+The low-threshold signal is passed through a **delay block (T)**, while the high-threshold signal is used directly. Both signals are then combined using an **AND gate**, ensuring valid event detection within a defined time window.
+
+A **monostable block** generates a pulse with controlled width at the output.
+
+The delay block is not fixed to a specific implementation — in practical designs it can be realized using an external delay line, e.g. **MC10EP195**.
+
+---
 
 ## LTspice Implementation (DTD)
 
