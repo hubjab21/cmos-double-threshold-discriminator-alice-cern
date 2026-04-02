@@ -10,6 +10,32 @@ Modern high-energy physics experiments, such as ALICE at CERN, require extremely
 
 Traditional single-threshold discriminators suffer from time walk effects, making them less suitable for precise timing applications. Therefore, a double-threshold discriminator architecture was chosen as a compromise between simplicity and timing accuracy.
 
+## System Requirements
+
+The designed double-threshold discriminator in CMOS technology must operate under demanding conditions imposed by the Fast Interaction Trigger (FIT) detector in the ALICE experiment at CERN.
+
+The system is required to process two distinct classes of input signals originating from different types of photomultiplier tubes (PMTs), each characterized by significantly different electrical properties.
+
+### Signal Classes
+
+Two main categories of input signals were identified:
+
+#### FT0 (MCP-PMT signals)
+- Amplitude range: 3 mV – 2000 mV 
+- Rise time: ~1.6 ns 
+- Fall time: ~4 ns 
+- Pulse charge: 31 pVs / 50 Ω per 1 mip 
+
+#### FV0/FDD (fine mesh PMT signals)
+- Amplitude range: 3 mV – 5000 mV 
+- Rise time: ~6.5 ns 
+- Fall time: ~10 ns 
+- Pulse charge: 54 pVs / 50 Ω per 1 mip 
+
+These parameters indicate that the discriminator must handle a wide dynamic range of input amplitudes while maintaining high timing precision for very fast signals.
+
+
+
 ## Methodology
 
 The project consisted of two main stages:
