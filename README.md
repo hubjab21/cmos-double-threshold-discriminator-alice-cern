@@ -364,7 +364,7 @@ This ensures:
 The design starts with a basic CMOS inverter, built from one PMOS and one NMOS transistor. 
 It provides signal inversion and is later used to construct more complex logic gates.
 
-![CMOS Inverter](./images/cadence-virtuoso/cmos_inverter.png)
+![CMOS Inverter](images/cadence-virtuoso/cmos_inverter_schematic.png)
 
 ---
 
@@ -373,7 +373,7 @@ Next, a NAND gate is implemented using:
 - parallel PMOS transistors (pull-up network),
 - series NMOS transistors (pull-down network).
 
-![CMOS NAND](./images/cadence-virtuoso/cmos_nand.png)
+![CMOS NAND](images/cadence-virtuoso/cmos_nand_gate_schematic.png)
 
 ---
 
@@ -386,7 +386,7 @@ AND = NOT(NAND)
 
 This approach simplifies CMOS implementation.
 
-![CMOS AND](./images/cadence-virtuoso/cmos_and.png)
+![CMOS AND](images/cadence-virtuoso/cmos_and_gate_schematic.png)
 
 ---
 
@@ -398,7 +398,7 @@ A CMOS analog comparator is designed using:
 
 It converts the analog signal into a digital output based on a threshold.
 
-![Comparator](./images/cadence-virtuoso/comparator.png)
+![Comparator](images/cadence-virtuoso/comparator_schematic.png)
 
 ---
 
@@ -413,21 +413,21 @@ Operation:
 - high threshold → direct,
 - AND → detects coincidence.
 
-![Discriminator Schematic](./images/cadence-virtuoso/discriminator_schematic.png)
+![Discriminator Schematic](images/cadence-virtuoso/discriminator_schematic.png)
 
 ---
 
 ### Comparator Testbench
 A testbench is used to verify comparator behavior with a pulse input and reference voltage.
 
-![Comparator TB](./images/cadence-virtuoso/comparator_tb.png)
+![Comparator TB](images/cadence-virtuoso/comparator_testbench.png)
 
 ---
 
 ### Discriminator Testbench
 The full discriminator is tested using a pulse input and threshold levels.
 
-![Discriminator TB](./images/cadence-virtuoso/discriminator_tb.png)
+![Discriminator TB](images/cadence-virtuoso/discriminator_testbench.png)
 
 ---
 
@@ -437,7 +437,7 @@ Simulation results show correct operation:
 - delayed signal,
 - final AND output.
 
-![Waveforms](./images/cadence-virtuoso/discriminator_waveform.png)
+![Waveforms](images/cadence-virtuoso/discriminator_waveform.png)
 
 ---
 
@@ -449,7 +449,7 @@ All blocks are implemented in CMOS layout:
 - comparator,
 - full discriminator.
 
-![Layout](./images/cadence-virtuoso/discriminator_layout.png)
+![Layout](images/cadence-virtuoso/discriminator_layout.png)
 
 ---
 
