@@ -148,9 +148,7 @@ Although all signals start at the same time, they cross the threshold at differe
 
 The difference between detection times is called **time walk (jitter)** and in this case equals:
 
-\[
-\Delta t = 0.225 \text{ ns}
-\]
+Δt = 0.225 ns
 
 It is illustrated by the **purple double arrow** on the plot.
 
