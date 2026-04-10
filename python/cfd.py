@@ -31,11 +31,13 @@ def find_zero_after(t, y_diff, t_min=5):
     
     return x1 - y1 * (x2 - x1) / (y2 - y1)
 
-
-y = input_signal(t, t0=5, A=0.885, tau=1.5)
+def delay_signal(signal, t, delay):
+    return np.interp(t - delay, t, signal, left=0, right=0)
+    
+y = input_signal(t, t0=5, A=0.885, tau=1.9)
 
 delay = 1.5
-y_delayed = input_signal(t - delay, t0=5, A=0.7, tau=1.5)
+y_delayed = delay_signal(y, t, delay)
 
 attenuation = 0.3
 y_attenuated = attenuation * y
@@ -61,13 +63,13 @@ plt.plot([], [], '--', color='red', label=f'Zero crossing ≈ {t_zero:.2f} ns')
 plt.plot([], [], color='black', linewidth=2, label='Digital output (0/5 V)')
 
 ax1.set_xlim(0, 20)
-ax1.set_ylim(-0.15, 0.5)
+ax1.set_ylim(-0.15, 0.65)
 
 ax1.set_xlabel("Time [ns]")
 ax1.set_ylabel("Analog voltage [V]")
 
 ax2 = ax1.twinx()
-ax2.set_ylim(-1.560, 5.1)
+ax2.set_ylim(-1.2, 5.1)
 ax2.set_ylabel("Digital voltage [V]")
 ax2.plot(t, digital_signal, color='black', label='Digital output', linewidth=2)
 
@@ -75,4 +77,5 @@ ax1.legend()
 ax1.grid()
 
 plt.show()
+
 
