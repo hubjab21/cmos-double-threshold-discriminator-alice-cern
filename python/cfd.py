@@ -63,13 +63,13 @@ plt.plot([], [], '--', color='red', label=f'Zero crossing ≈ {t_zero:.2f} ns')
 plt.plot([], [], color='black', linewidth=2, label='Digital output (0/5 V)')
 
 ax1.set_xlim(0, 20)
-ax1.set_ylim(-0.15, 0.65)
+ax1.set_ylim(-0.19, 0.65)
 
 ax1.set_xlabel("Time [ns]")
 ax1.set_ylabel("Analog voltage [V]")
 
 ax2 = ax1.twinx()
-ax2.set_ylim(-1.2, 5.1)
+ax2.set_ylim(-1.525, 5.1)
 ax2.set_ylabel("Digital voltage [V]")
 ax2.plot(t, digital_signal, color='black', label='Digital output', linewidth=2)
 
