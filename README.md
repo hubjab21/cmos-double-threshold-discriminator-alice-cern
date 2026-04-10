@@ -199,19 +199,21 @@ The zero-crossing point is nearly independent of amplitude → minimal jitter.
 - ✖ **Black crosses** — detection points (zero-crossings) 
 - signals remain time-aligned despite amplitude variations 
 
-![CFD waveform 0–495 ns](images/discriminator/cfd_waveform_495.png)
+![CFD waveform 0–500 ns](images/discriminator/cfd_waveform_500.png)
 
-*Figure: Long time window (0–495 ns).*
 
+
+*Figure: Long time window (0–500 ns).*
 
 | Time [ns] | Input signal amplitude [V] |
 |----------|-----------------------------|
-| 56.852   | 0.0139                      |
-| 60.171   | 0.0074                      |
-| 98.115   | 0.0163                      |
-| 108.851  | 0.0126                      |
-| 468.057  | 0.0274                      |
-| 473.379  | 0.0074                      |
+| 10.78    | 0.042                       |
+| 92.61    | 0.005                       |
+| 100.78   | 0.076                       |
+| 183.11   | 0.005                       |
+| 190.97   | 0.065                       |
+| 363.82   | 0.014                       |
+| 370.87   | 0.112                       |
 
 The results confirm that detection occurs at very low voltage levels, 
 well below the signal peak. This demonstrates that CFD timing depends on 
