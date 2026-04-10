@@ -5,15 +5,35 @@ import matplotlib.pyplot as plt
 delay_ns = 5
 attenuation = 0.30
 
-t = np.linspace(0, 125, 2000)
+t = np.linspace(0, 525, 2000)
 
 
-def input_signal(t):
-    y = 0.07 * np.sin(2 * np.pi * t / 40)
-    y += 0.03 * np.sin(2 * np.pi * t / 80)
-    y += 0.08
+def sine_segment(t, t_start, t_end, y_start, y_end):
+    y = np.zeros_like(t)
+    
+    mask = (t >= t_start) & (t <= t_end)
+    x = (t[mask] - t_start) / (t_end - t_start)
+    
+    y[mask] = y_start + (y_end - y_start) * 0.5 * (1 - np.cos(np.pi * x))
+    
     return y
 
+def input_signal(t):
+    y = np.zeros_like(t)
+
+    y += sine_segment(t, 0, 10, 0, 0.25)    # rise to 0.25
+    y += sine_segment(t, 10, 30, 0.25, 0)    # fall to 0
+
+    y += sine_segment(t, 30, 45, 0, 0.35)    # rise to 0.45
+    y += sine_segment(t, 45, 60, 0.35, 0)    # fall
+
+    y += sine_segment(t, 60, 70, 0, 0.20)    #  large rise to 1.25
+    y += sine_segment(t, 70, 90, 0.20, 0)  # fall to 0.4
+
+    y += sine_segment(t, 90, 125, 0, 0.2)   # rise to 2.0
+
+    return y
+    
 
 def delay_signal(signal, t, delay):
     return np.interp(t - delay, t, signal, left=0, right=0)
@@ -46,7 +66,7 @@ plt.plot(t, y_attenuated, color='#00916e', linewidth=2, label=f'Attenuated (f={a
 plt.plot(t, y_diff, color='#8b2bbd', linewidth=2, label='Difference (delayed - attenuated)')
 
 plt.axhline(0, color='gray', linestyle='--', linewidth=1)
-zero_crossings = [tz for tz in zero_crossings if 10 < tz < 115]
+zero_crossings = [tz for tz in zero_crossings if 10 < tz < 125]
 
 for tz in zero_crossings:
     plt.axvline(tz, color='gray', linestyle='--', linewidth=1.2, alpha=0.6)
@@ -56,13 +76,13 @@ plt.plot([], [], 'x', color='black', label='Zero crossings')
 
 
 plt.xlim(5, 125)
-plt.xticks(np.linspace(5, 120, 11), np.linspace(0, 100, 11))
+plt.xticks(np.linspace(5, 125, 11), np.linspace(0, 100, 11))
 
 plt.xlabel('Time [ns]')
 plt.ylabel('Analog Voltage [V]')
 
 plt.grid(True, alpha=0.3)
 
-plt.legend(loc='lower right')
+plt.legend(loc='upper right')
 plt.tight_layout()
 plt.show()
